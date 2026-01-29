@@ -1,5 +1,5 @@
 
-import { GameWorld } from './types';
+import { GameWorld } from './types.ts';
 
 export const INITIAL_WORLD: GameWorld = {
   startRoom: 'circle_of_light',
@@ -61,6 +61,5 @@ export const INITIAL_WORLD: GameWorld = {
     }
   },
   items: {
-    // Items can be added here later
   }
 };

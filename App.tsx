@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { INITIAL_WORLD } from './gameConfig';
-import { Direction, GameState, Room } from './types';
+import { INITIAL_WORLD } from './gameConfig.ts';
+import { Direction, GameState, Room } from './types.ts';
 
 // Component: Compass Button
 const NavButton: React.FC<{
@@ -89,7 +89,6 @@ export default function App() {
           if (event.action === 'setFlag') {
             newFlags[event.params.flag] = true;
           }
-          // Note: unlock and addItem handled via setWorld elsewhere or would need more logic here
         });
       }
 
@@ -177,11 +176,8 @@ export default function App() {
   const checkEvents = (trigger: 'onEnter' | 'onUseItem' | 'onPickUp', triggerId?: string, targetRoomOverride?: Room) => {
     const targetRoom = targetRoomOverride || currentRoom;
     const events = targetRoom.events?.filter(e => {
-      // Check trigger
       if (e.trigger !== trigger) return false;
-      // Check trigger ID
       if (e.triggerId && e.triggerId !== triggerId) return false;
-      // Check condition flag
       if (e.conditionFlag) {
         const isNegated = e.conditionFlag.startsWith('!');
         const flagName = isNegated ? e.conditionFlag.slice(1) : e.conditionFlag;
@@ -198,7 +194,6 @@ export default function App() {
     }
 
     events.forEach(event => {
-      // Execute main action
       switch (event.action) {
         case 'unlock':
           setWorld(prev => {
@@ -228,7 +223,6 @@ export default function App() {
           break;
       }
 
-      // Check if event also needs to set a flag (common for one-time messages)
       if (event.params.setFlag) {
         setState(prev => ({
           ...prev,
@@ -240,7 +234,6 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen max-w-md mx-auto bg-slate-900 overflow-hidden border-x border-slate-700 relative">
-      {/* Header */}
       <header className="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-md">
         <div>
           <h1 className="text-xl font-bold text-indigo-400">Gemini Quest</h1>
@@ -248,7 +241,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Game Log */}
       <main className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-gradient-to-b from-slate-900 to-slate-950">
         {state.logs.map((log, i) => (
           <div 
@@ -268,7 +260,6 @@ export default function App() {
         <div ref={logEndRef} />
       </main>
 
-      {/* Item Context Menu Overlay */}
       {selectedItemId && (
         <div className="absolute inset-0 z-50 bg-slate-950/80 flex items-center justify-center p-6 animate-in fade-in zoom-in duration-200">
             <div className="bg-slate-800 border border-slate-600 rounded-xl w-full p-4 space-y-4 shadow-2xl">
@@ -306,10 +297,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Interaction Panel */}
       <section className="bg-slate-800 border-t border-slate-700 p-4 space-y-4 shadow-2xl">
-        
-        {/* Room Items / Actions */}
         <div className="flex flex-wrap gap-2">
           {(currentRoom.items?.length || 0) > 0 && (
             <div className="w-full text-[10px] text-slate-500 uppercase tracking-tighter mb-1">Items in this room</div>
@@ -328,10 +316,7 @@ export default function App() {
           })}
         </div>
 
-        {/* Controls Layout */}
         <div className="grid grid-cols-2 gap-4">
-          
-          {/* Compass Navigation */}
           <div className="nav-grid">
             <NavButton dir="nw" label="NW" onClick={() => move('nw')} isActive={!!currentRoom.exits.nw} />
             <NavButton dir="n" label="N" onClick={() => move('n')} isActive={!!currentRoom.exits.n} />
@@ -344,7 +329,6 @@ export default function App() {
             <NavButton dir="se" label="SE" onClick={() => move('se')} isActive={!!currentRoom.exits.se} />
           </div>
 
-          {/* Inventory */}
           <div className="bg-slate-900/50 rounded-xl border border-slate-700 p-3 flex flex-col">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
