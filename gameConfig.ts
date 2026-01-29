@@ -65,7 +65,47 @@ export const INITIAL_WORLD: GameWorld = {
       name: 'Oceanside Beach',
       description: 'You are walking along the sandy beach. Loose seashells mix into the sand around you.',
       exits: {
-        e: 'oceanside_beach_w2'
+        e: 'oceanside_beach_w2',
+        w: 'oceanside_beach_w4'
+      },
+      items: []
+    },
+    'oceanside_beach_w4': {
+      id: 'oceanside_beach_w4',
+      name: 'Oceanside Beach',
+      description: 'You are walking along the sandy beach. Sparse areas of grass can be seen around the sand dunes.',
+      exits: {
+        e: 'oceanside_beach_w3',
+        w: 'oceanside_beach_w5'
+      },
+      items: []
+    },
+    'oceanside_beach_w5': {
+      id: 'oceanside_beach_w5',
+      name: 'Oceanside Beach',
+      description: 'You are walking along the sandy beach. Low shrubs with prickly spines grow out of the dunes here and there.',
+      exits: {
+        e: 'oceanside_beach_w4',
+        w: 'sandy_forest'
+      },
+      items: []
+    },
+    'sandy_forest': {
+      id: 'sandy_forest',
+      name: 'Sandy Forest',
+      description: 'There are scattered trees growing along the beach and into the dunes. The roots of the trees curl up out of the sand covered in long thorns.',
+      exits: {
+        e: 'oceanside_beach_w5',
+        w: 'tangled_roots'
+      },
+      items: []
+    },
+    'tangled_roots': {
+      id: 'tangled_roots',
+      name: 'Tangled Roots',
+      description: 'The tree roots tangle together making the beach impassable.',
+      exits: {
+        e: 'sandy_forest'
       },
       items: []
     }
