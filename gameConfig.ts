@@ -1,4 +1,3 @@
-
 import { GameWorld } from './types.ts';
 
 export const INITIAL_WORLD: GameWorld = {
@@ -25,7 +24,8 @@ export const INITIAL_WORLD: GameWorld = {
       name: 'Sandy Shores',
       description: 'You arrive at the edge of the water. There is a circle burned into the sand that sparkles with many colors in the sunlight. The beach extends to the east and west. The ocean waves crash from the south. The sand dunes extend endlessly to the north.',
       exits: {
-        w: 'oceanside_beach_w1'
+        w: 'oceanside_beach_w1',
+        e: 'oceanside_beach_e1'
       },
       items: [],
       events: [
@@ -39,6 +39,45 @@ export const INITIAL_WORLD: GameWorld = {
           }
         }
       ]
+    },
+    'oceanside_beach_e1': {
+      id: 'oceanside_beach_e1',
+      name: 'Oceanside Beach',
+      description: 'You are walking along the sandy beach. Large waves crash to the south of you. There are rolling sand dunes to the north.',
+      exits: {
+        w: 'sandy_shores',
+        e: 'oceanside_beach_e2'
+      },
+      items: []
+    },
+    'oceanside_beach_e2': {
+      id: 'oceanside_beach_e2',
+      name: 'Oceanside Beach',
+      description: 'You are walking along the sandy beach. Large rocks emerge out of the sand throughout the beach.',
+      exits: {
+        w: 'oceanside_beach_e1',
+        e: 'oceanside_beach_e3'
+      },
+      items: []
+    },
+    'oceanside_beach_e3': {
+      id: 'oceanside_beach_e3',
+      name: 'Oceanside Beach',
+      description: 'You are walking along the beach. The sand meets the edge of a rocky shore continuing to the east.',
+      exits: {
+        w: 'oceanside_beach_e2',
+        e: 'cliffs_base'
+      },
+      items: []
+    },
+    'cliffs_base': {
+      id: 'cliffs_base',
+      name: "Cliff's Base",
+      description: 'You are at the base of a towering sheer rock face. The cliffs extend off into the dunes. Occaisionally you hear a muffled boom rolling across the waves.',
+      exits: {
+        w: 'oceanside_beach_e3'
+      },
+      items: []
     },
     'oceanside_beach_w1': {
       id: 'oceanside_beach_w1',
