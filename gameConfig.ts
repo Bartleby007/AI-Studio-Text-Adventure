@@ -25,7 +25,8 @@ export const INITIAL_WORLD: GameWorld = {
       description: 'You arrive at the edge of the water. There is a circle burned into the sand that sparkles with many colors in the sunlight. The beach extends to the east and west. The ocean waves crash from the south. The sand dunes extend endlessly to the north.',
       exits: {
         w: 'oceanside_beach_w1',
-        e: 'oceanside_beach_e1'
+        e: 'oceanside_beach_e1',
+        n: 'rolling_dunes'
       },
       items: [],
       events: [
@@ -39,6 +40,32 @@ export const INITIAL_WORLD: GameWorld = {
           }
         }
       ]
+    },
+    'rolling_dunes': {
+      id: 'rolling_dunes',
+      name: 'Rolling Dunes',
+      description: 'You trudge through the hot sand. The dunes extend in every direction as far as you can see. The ocean is to the south.',
+      exits: {
+        s: 'sandy_shores',
+        n: 'sandstorm'
+      },
+      items: []
+    },
+    'sandstorm': {
+      id: 'sandstorm',
+      name: 'Sandstorm',
+      description: 'You enter a swirling sandstorm. The blowing sand blinds you and you lose all sense of direction.',
+      exits: {
+        n: 'rolling_dunes',
+        ne: 'rolling_dunes',
+        e: 'rolling_dunes',
+        se: 'rolling_dunes',
+        s: 'rolling_dunes',
+        sw: 'rolling_dunes',
+        w: 'rolling_dunes',
+        nw: 'rolling_dunes'
+      },
+      items: []
     },
     'oceanside_beach_e1': {
       id: 'oceanside_beach_e1',
