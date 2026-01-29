@@ -55,7 +55,17 @@ export const INITIAL_WORLD: GameWorld = {
       name: 'Oceanside Beach',
       description: 'You are walking along the sandy beach. There are piles of seaweed scattered around the tide lines.',
       exits: {
-        e: 'oceanside_beach_w1'
+        e: 'oceanside_beach_w1',
+        w: 'oceanside_beach_w3'
+      },
+      items: []
+    },
+    'oceanside_beach_w3': {
+      id: 'oceanside_beach_w3',
+      name: 'Oceanside Beach',
+      description: 'You are walking along the sandy beach. Loose seashells mix into the sand around you.',
+      exits: {
+        e: 'oceanside_beach_w2'
       },
       items: []
     }
