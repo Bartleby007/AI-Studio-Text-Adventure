@@ -6,6 +6,7 @@ export interface GameItem {
   name: string;
   description: string;
   canTake: boolean;
+  defaultUseMessage?: string;
   isHidden?: boolean;
 }
 

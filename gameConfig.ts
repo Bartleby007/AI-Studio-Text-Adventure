@@ -104,7 +104,7 @@ export const INITIAL_WORLD: GameWorld = {
       exits: {
         w: 'oceanside_beach_e3'
       },
-      items: []
+      items: ['shovel']
     },
     'oceanside_beach_w1': {
       id: 'oceanside_beach_w1',
@@ -177,5 +177,12 @@ export const INITIAL_WORLD: GameWorld = {
     }
   },
   items: {
+    'shovel': {
+      id: 'shovel',
+      name: 'Shovel',
+      description: 'A wood handled shovel. Handy for digging holes and turning over dirt in your garden.',
+      canTake: true,
+      defaultUseMessage: 'You dig for a while, but find nothing new.'
+    }
   }
 };

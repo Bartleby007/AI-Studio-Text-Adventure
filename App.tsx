@@ -137,7 +137,16 @@ export default function App() {
     const item = world.items[itemId];
     if (!item) return;
     addLog(`You use the ${item.name}...`, 'system');
-    checkEvents('onUseItem', itemId);
+    const eventTriggered = checkEvents('onUseItem', itemId);
+    
+    if (!eventTriggered) {
+      if (item.defaultUseMessage) {
+        addLog(item.defaultUseMessage, 'system');
+      } else {
+        addLog("Nothing happens.", "system");
+      }
+    }
+    
     setSelectedItemId(null);
   };
 
@@ -188,8 +197,7 @@ export default function App() {
     });
     
     if (!events || events.length === 0) {
-      if (trigger === 'onUseItem') addLog("Nothing happens.", "system");
-      return;
+      return false;
     }
 
     events.forEach(event => {
@@ -229,14 +237,20 @@ export default function App() {
         }));
       }
     });
+
+    return true;
   };
 
   return (
     <div className="flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-slate-900 overflow-hidden border-x border-slate-700 relative">
-      <header className="flex-shrink-0 p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-md z-10">
-        <div>
-          <h1 className="text-xl font-bold text-indigo-400">Gemini Quest</h1>
-          <p className="text-xs text-slate-400 uppercase tracking-widest">{currentRoom.name}</p>
+      <header className="flex-shrink-0 p-3 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-md z-10 gap-3">
+        <div className="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg shadow-inner flex-shrink-0">
+          <h1 className="text-xs sm:text-sm font-black text-indigo-500 tracking-tighter uppercase italic">Gemini Quest</h1>
+        </div>
+        <div className="flex-1 flex justify-end overflow-hidden">
+          <div className="px-3 sm:px-4 py-1.5 bg-indigo-600/10 border border-indigo-500/40 rounded-xl shadow-lg truncate">
+            <h2 className="text-base sm:text-xl font-bold text-white tracking-wide text-right truncate">{currentRoom.name}</h2>
+          </div>
         </div>
       </header>
 
