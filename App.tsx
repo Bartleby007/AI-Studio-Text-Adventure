@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { INITIAL_WORLD } from './gameConfig.ts';
-import { Direction, GameState, Room } from './types.ts';
+import { Direction, GameState, Room, RoomEvent } from './types.ts';
 
 // Component: Compass Button
 const NavButton: React.FC<{
@@ -57,6 +57,22 @@ export default function App() {
     }));
   };
 
+  const isEventConditionsMet = (e: RoomEvent) => {
+    // Check Flag Condition
+    if (e.conditionFlag) {
+      const isNegated = e.conditionFlag.startsWith('!');
+      const flagName = isNegated ? e.conditionFlag.slice(1) : e.conditionFlag;
+      const flagValue = !!state.flags[flagName];
+      if (isNegated && flagValue) return false;
+      if (!isNegated && !flagValue) return false;
+    }
+    // Check Item Condition
+    if (e.conditionItem) {
+      if (!state.inventory.includes(e.conditionItem)) return false;
+    }
+    return true;
+  };
+
   const move = (dir: Direction) => {
     const nextRoomId = currentRoom.exits[dir];
     if (nextRoomId && world.rooms[nextRoomId]) {
@@ -67,14 +83,7 @@ export default function App() {
       
       const onEnterEvents = nextRoom.events?.filter(e => {
         if (e.trigger !== 'onEnter') return false;
-        if (e.conditionFlag) {
-          const isNegated = e.conditionFlag.startsWith('!');
-          const flagName = isNegated ? e.conditionFlag.slice(1) : e.conditionFlag;
-          const flagValue = !!state.flags[flagName];
-          if (isNegated && flagValue) return false;
-          if (!isNegated && !flagValue) return false;
-        }
-        return true;
+        return isEventConditionsMet(e);
       });
 
       if (onEnterEvents) {
@@ -186,14 +195,7 @@ export default function App() {
     const events = targetRoom.events?.filter(e => {
       if (e.trigger !== trigger) return false;
       if (e.triggerId && e.triggerId !== triggerId) return false;
-      if (e.conditionFlag) {
-        const isNegated = e.conditionFlag.startsWith('!');
-        const flagName = isNegated ? e.conditionFlag.slice(1) : e.conditionFlag;
-        const flagValue = !!state.flags[flagName];
-        if (isNegated && flagValue) return false;
-        if (!isNegated && !flagValue) return false;
-      }
-      return true;
+      return isEventConditionsMet(e);
     });
     
     if (!events || events.length === 0) {
@@ -201,6 +203,7 @@ export default function App() {
     }
 
     events.forEach(event => {
+      // Handle the core action
       switch (event.action) {
         case 'unlock':
           setWorld(prev => {
@@ -208,13 +211,6 @@ export default function App() {
             newRooms[state.currentRoomId].exits[event.params.direction] = event.params.targetRoom;
             return { ...prev, rooms: newRooms };
           });
-          if (event.params.message) addLog(event.params.message, 'event');
-          break;
-        case 'message':
-          addLog(event.params.message, 'event');
-          break;
-        case 'setFlag':
-          setState(prev => ({ ...prev, flags: { ...prev.flags, [event.params.flag]: true } }));
           break;
         case 'addItem':
           setWorld(prev => ({
@@ -228,8 +224,23 @@ export default function App() {
             }
           }));
           break;
+        case 'setFlag':
+          setState(prev => ({ ...prev, flags: { ...prev.flags, [event.params.flag]: true } }));
+          break;
+        case 'removeItem':
+           // Future implementation
+           break;
+        case 'message':
+          // Handled by the generic message check below
+          break;
       }
 
+      // Handle optional associated message
+      if (event.params.message) {
+        addLog(event.params.message, 'event');
+      }
+
+      // Handle optional flag setting
       if (event.params.setFlag) {
         setState(prev => ({
           ...prev,

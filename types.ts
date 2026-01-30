@@ -14,6 +14,7 @@ export interface RoomEvent {
   trigger: 'onEnter' | 'onUseItem' | 'onPickUp';
   triggerId?: string; // e.g. which item ID triggers it
   conditionFlag?: string; // e.g. "!flagName" for false, "flagName" for true
+  conditionItem?: string; // e.g. "glowing_stone" to require item in inventory
   action: 'unlock' | 'message' | 'setFlag' | 'removeItem' | 'addItem';
   params: Record<string, any>;
 }

@@ -154,7 +154,29 @@ export const INITIAL_WORLD: GameWorld = {
         e: 'oceanside_beach_w4',
         w: 'sandy_forest'
       },
-      items: []
+      items: [],
+      events: [
+        {
+          trigger: 'onUseItem',
+          triggerId: 'shovel',
+          conditionFlag: '!conch_uncovered',
+          action: 'addItem',
+          params: {
+            itemId: 'green_conch_shell',
+            message: 'You dig deep into the soft sand... Clink! Your shovel hits something hard. You clear away the sand to reveal a beautiful Green Conch Shell!',
+            setFlag: 'conch_uncovered'
+          }
+        },
+        {
+          trigger: 'onEnter',
+          conditionItem: 'glowing_stone',
+          conditionFlag: '!conch_uncovered',
+          action: 'message',
+          params: {
+            message: 'The Glowing Stone vibrates faintly in your hand.'
+          }
+        }
+      ]
     },
     'sandy_forest': {
       id: 'sandy_forest',
@@ -190,6 +212,13 @@ export const INITIAL_WORLD: GameWorld = {
       description: 'A smooth flat stone that fits comfortably in the palm of your hand. The stone emits a pale blue light and feels slightly warm.',
       canTake: true,
       defaultUseMessage: 'You stare at the stone for a few minutes but nothing happens.'
+    },
+    'green_conch_shell': {
+      id: 'green_conch_shell',
+      name: 'Green Conch Shell',
+      description: 'A large green conch shell that used to be home to some unknown sea creature.',
+      canTake: true,
+      defaultUseMessage: 'You put your ear up to the shell and can hear the ocean. The sound gradually fades into a deep silence for a few seconds.'
     }
   }
 };
