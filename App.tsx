@@ -11,7 +11,7 @@ const NavButton: React.FC<{
   disabled?: boolean;
   isActive?: boolean;
 }> = ({ dir, label, onClick, disabled, isActive }) => {
-  const baseClasses = "flex items-center justify-center p-3 rounded-lg font-bold transition-all shadow-lg active:scale-95";
+  const baseClasses = "flex items-center justify-center p-2 sm:p-3 rounded-lg font-bold transition-all shadow-lg active:scale-95 text-xs sm:text-sm";
   const activeClasses = isActive 
     ? "bg-indigo-600 text-white hover:bg-indigo-500" 
     : "bg-slate-800 text-slate-400 hover:bg-slate-700 opacity-50 cursor-not-allowed";
@@ -62,7 +62,6 @@ export default function App() {
     if (nextRoomId && world.rooms[nextRoomId]) {
       const nextRoom = world.rooms[nextRoomId];
       
-      // Process onEnter events before logging the room description
       const eventLogs: Array<{ type: 'event' | 'system' | 'narrative', text: string, timestamp: number }> = [];
       const newFlags = { ...state.flags };
       
@@ -233,8 +232,8 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-md mx-auto bg-slate-900 overflow-hidden border-x border-slate-700 relative">
-      <header className="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-md">
+    <div className="flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-slate-900 overflow-hidden border-x border-slate-700 relative">
+      <header className="flex-shrink-0 p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-md z-10">
         <div>
           <h1 className="text-xl font-bold text-indigo-400">Gemini Quest</h1>
           <p className="text-xs text-slate-400 uppercase tracking-widest">{currentRoom.name}</p>
@@ -297,7 +296,7 @@ export default function App() {
         </div>
       )}
 
-      <section className="bg-slate-800 border-t border-slate-700 p-4 space-y-4 shadow-2xl">
+      <section className="flex-shrink-0 bg-slate-800 border-t border-slate-700 p-4 space-y-4 shadow-2xl pb-safe">
         <div className="flex flex-wrap gap-2">
           {(currentRoom.items?.length || 0) > 0 && (
             <div className="w-full text-[10px] text-slate-500 uppercase tracking-tighter mb-1">Items in this room</div>
@@ -329,17 +328,17 @@ export default function App() {
             <NavButton dir="se" label="SE" onClick={() => move('se')} isActive={!!currentRoom.exits.se} />
           </div>
 
-          <div className="bg-slate-900/50 rounded-xl border border-slate-700 p-3 flex flex-col">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+          <div className="bg-slate-900/50 rounded-xl border border-slate-700 p-3 flex flex-col min-h-0">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1 flex-shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1.118.994L9 6z" clipRule="evenodd" />
                 <path d="M9 11h2v5a2 2 0 01-2 2H4a2 2 0 01-2-2v-5h7zM14 11h2v5a2 2 0 01-2 2h-5v-7h7z" />
               </svg>
-              Inventory
+              Inv
             </h3>
             <div className="flex-1 overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
               {state.inventory.length === 0 ? (
-                <div className="text-slate-600 text-xs text-center py-4">Your pockets are empty</div>
+                <div className="text-slate-600 text-[10px] text-center py-4">Empty</div>
               ) : (
                 state.inventory.map(itemId => {
                   const item = world.items[itemId];
@@ -347,7 +346,7 @@ export default function App() {
                     <button
                       key={itemId}
                       onClick={() => setSelectedItemId(itemId)}
-                      className="w-full text-left bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs p-2 rounded border border-slate-700 transition-colors"
+                      className="w-full text-left bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] p-2 rounded border border-slate-700 transition-colors truncate"
                     >
                       {item.name}
                     </button>
