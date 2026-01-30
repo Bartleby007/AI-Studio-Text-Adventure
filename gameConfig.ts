@@ -173,7 +173,7 @@ export const INITIAL_WORLD: GameWorld = {
       exits: {
         e: 'sandy_forest'
       },
-      items: []
+      items: ['glowing_stone']
     }
   },
   items: {
@@ -183,6 +183,13 @@ export const INITIAL_WORLD: GameWorld = {
       description: 'A wood handled shovel. Handy for digging holes and turning over dirt in your garden.',
       canTake: true,
       defaultUseMessage: 'You dig for a while, but find nothing new.'
+    },
+    'glowing_stone': {
+      id: 'glowing_stone',
+      name: 'Glowing Stone',
+      description: 'A smooth flat stone that fits comfortably in the palm of your hand. The stone emits a pale blue light and feels slightly warm.',
+      canTake: true,
+      defaultUseMessage: 'You stare at the stone for a few minutes but nothing happens.'
     }
   }
 };
