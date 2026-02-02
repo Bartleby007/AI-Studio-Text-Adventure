@@ -15,7 +15,7 @@ export interface RoomEvent {
   triggerId?: string; // e.g. which item ID triggers it
   conditionFlag?: string; // e.g. "!flagName" for false, "flagName" for true
   conditionItem?: string; // e.g. "glowing_stone" to require item in inventory
-  action: 'unlock' | 'message' | 'setFlag' | 'removeItem' | 'addItem';
+  action: 'unlock' | 'message' | 'setFlag' | 'removeItem' | 'addItem' | 'teleport' | 'updateExit' | 'moveRoomItems';
   params: Record<string, any>;
 }
 

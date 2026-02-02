@@ -58,7 +58,6 @@ export default function App() {
   };
 
   const isEventConditionsMet = (e: RoomEvent) => {
-    // Check Flag Condition
     if (e.conditionFlag) {
       const isNegated = e.conditionFlag.startsWith('!');
       const flagName = isNegated ? e.conditionFlag.slice(1) : e.conditionFlag;
@@ -66,7 +65,6 @@ export default function App() {
       if (isNegated && flagValue) return false;
       if (!isNegated && !flagValue) return false;
     }
-    // Check Item Condition
     if (e.conditionItem) {
       if (!state.inventory.includes(e.conditionItem)) return false;
     }
@@ -203,7 +201,6 @@ export default function App() {
     }
 
     events.forEach(event => {
-      // Handle the core action
       switch (event.action) {
         case 'unlock':
           setWorld(prev => {
@@ -211,6 +208,42 @@ export default function App() {
             newRooms[state.currentRoomId].exits[event.params.direction] = event.params.targetRoom;
             return { ...prev, rooms: newRooms };
           });
+          break;
+        case 'updateExit':
+          setWorld(prev => {
+            const newRooms = { ...prev.rooms };
+            const rId = event.params.roomId;
+            if (newRooms[rId]) {
+               newRooms[rId].exits[event.params.direction] = event.params.targetRoomId;
+            }
+            return { ...prev, rooms: newRooms };
+          });
+          break;
+        case 'moveRoomItems':
+          setWorld(prev => {
+            const newRooms = { ...prev.rooms };
+            const sourceId = event.params.sourceRoomId;
+            const targetId = event.params.targetRoomId;
+            if (newRooms[sourceId] && newRooms[targetId]) {
+              const itemsToMove = newRooms[sourceId].items;
+              newRooms[targetId].items = [...newRooms[targetId].items, ...itemsToMove];
+              newRooms[sourceId].items = [];
+            }
+            return { ...prev, rooms: newRooms };
+          });
+          break;
+        case 'teleport':
+          const tId = event.params.targetRoomId;
+          if (world.rooms[tId]) {
+            setState(prev => ({
+              ...prev,
+              currentRoomId: tId,
+              logs: [
+                ...prev.logs,
+                { type: 'narrative', text: world.rooms[tId].description, timestamp: Date.now() }
+              ]
+            }));
+          }
           break;
         case 'addItem':
           setWorld(prev => ({
@@ -227,20 +260,12 @@ export default function App() {
         case 'setFlag':
           setState(prev => ({ ...prev, flags: { ...prev.flags, [event.params.flag]: true } }));
           break;
-        case 'removeItem':
-           // Future implementation
-           break;
-        case 'message':
-          // Handled by the generic message check below
-          break;
       }
 
-      // Handle optional associated message
       if (event.params.message) {
         addLog(event.params.message, 'event');
       }
 
-      // Handle optional flag setting
       if (event.params.setFlag) {
         setState(prev => ({
           ...prev,

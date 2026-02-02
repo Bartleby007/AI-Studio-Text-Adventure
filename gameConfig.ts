@@ -65,7 +65,54 @@ export const INITIAL_WORLD: GameWorld = {
         w: 'rolling_dunes',
         nw: 'rolling_dunes'
       },
-      items: []
+      items: [],
+      events: [
+        {
+          trigger: 'onUseItem',
+          triggerId: 'green_conch_shell',
+          action: 'message',
+          params: {
+            message: 'You put your ear up to the shell and can hear the ocean. The whirling sandstorm suddenly calms as the winds settle down with a quiet stillness in the air.'
+          }
+        },
+        {
+          trigger: 'onUseItem',
+          triggerId: 'green_conch_shell',
+          action: 'updateExit',
+          params: {
+            roomId: 'rolling_dunes',
+            direction: 'n',
+            targetRoomId: 'salt_plains'
+          }
+        },
+        {
+          trigger: 'onUseItem',
+          triggerId: 'green_conch_shell',
+          action: 'updateExit',
+          params: {
+            roomId: 'salt_plains',
+            direction: 's',
+            targetRoomId: 'rolling_dunes'
+          }
+        },
+        {
+          trigger: 'onUseItem',
+          triggerId: 'green_conch_shell',
+          action: 'moveRoomItems',
+          params: {
+            sourceRoomId: 'sandstorm',
+            targetRoomId: 'salt_plains'
+          }
+        },
+        {
+          trigger: 'onUseItem',
+          triggerId: 'green_conch_shell',
+          action: 'teleport',
+          params: {
+            targetRoomId: 'salt_plains'
+          }
+        }
+      ]
     },
     'oceanside_beach_e1': {
       id: 'oceanside_beach_e1',
@@ -196,6 +243,13 @@ export const INITIAL_WORLD: GameWorld = {
         e: 'sandy_forest'
       },
       items: ['glowing_stone']
+    },
+    'salt_plains': {
+      id: 'salt_plains',
+      name: 'Salt Plains',
+      description: 'You are in a wide open plain filled with scrubby grass. You smell a salty breeze as you walk through the mix of sand and grass.',
+      exits: {},
+      items: []
     }
   },
   items: {
