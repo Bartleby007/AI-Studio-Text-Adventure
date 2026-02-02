@@ -3,6 +3,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { INITIAL_WORLD } from './gameConfig.ts';
 import { Direction, GameState, Room, RoomEvent } from './types.ts';
 
+// Hardcoded build timestamp for version tracking (EST Timezone)
+const BUILD_TIMESTAMP = "2026-02-02 11:30 EST";
+
 // Component: Compass Button
 const NavButton: React.FC<{
   dir: Direction | 'center';
@@ -55,6 +58,10 @@ export default function App() {
       ...prev,
       logs: [...prev.logs, { text, type, timestamp: Date.now() }]
     }));
+  };
+
+  const showBuildInfo = () => {
+    addLog(`Build Version: ${BUILD_TIMESTAMP}`, 'system');
   };
 
   const isEventConditionsMet = (e: RoomEvent) => {
@@ -280,9 +287,12 @@ export default function App() {
   return (
     <div className="flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-slate-900 overflow-hidden border-x border-slate-700 relative">
       <header className="flex-shrink-0 p-3 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-md z-10 gap-3">
-        <div className="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg shadow-inner flex-shrink-0">
+        <button 
+          onClick={showBuildInfo}
+          className="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg shadow-inner flex-shrink-0 active:scale-95 transition-transform hover:border-indigo-500/50"
+        >
           <h1 className="text-xs sm:text-sm font-black text-indigo-500 tracking-tighter uppercase italic">Gemini Quest</h1>
-        </div>
+        </button>
         <div className="flex-1 flex justify-end overflow-hidden">
           <div className="px-3 sm:px-4 py-1.5 bg-indigo-600/10 border border-indigo-500/40 rounded-xl shadow-lg truncate">
             <h2 className="text-base sm:text-xl font-bold text-white tracking-wide text-right truncate">{currentRoom.name}</h2>
