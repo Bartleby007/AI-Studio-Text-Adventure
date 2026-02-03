@@ -4,7 +4,7 @@ import { INITIAL_WORLD } from './gameConfig.ts';
 import { Direction, GameState, Room, RoomEvent, GameWorld } from './types.ts';
 
 // Hardcoded build timestamp for version tracking (EST Timezone)
-const BUILD_TIMESTAMP = "2026-02-02 12:45 EST";
+const BUILD_TIMESTAMP = "2026-02-02 17:15 EST";
 
 // Component: Compass Button
 const NavButton: React.FC<{
@@ -78,7 +78,6 @@ export default function App() {
         }]
       });
       setIsMainMenuOpen(false);
-      // We don't use addLog here because it relies on the previous state
     }
   };
 

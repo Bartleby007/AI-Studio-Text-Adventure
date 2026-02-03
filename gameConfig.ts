@@ -1,3 +1,4 @@
+
 import { GameWorld } from './types.ts';
 
 export const INITIAL_WORLD: GameWorld = {
@@ -120,7 +121,8 @@ export const INITIAL_WORLD: GameWorld = {
       description: 'You are walking along the sandy beach. Large waves crash to the south of you. There are rolling sand dunes to the north.',
       exits: {
         w: 'sandy_shores',
-        e: 'oceanside_beach_e2'
+        e: 'oceanside_beach_e2',
+        n: 'rolling_dunes'
       },
       items: []
     },
@@ -159,7 +161,8 @@ export const INITIAL_WORLD: GameWorld = {
       description: 'You are walking along the sandy beach. Large waves crash to the south of you. There are rolling sand dunes to the north.',
       exits: {
         e: 'sandy_shores',
-        w: 'oceanside_beach_w2'
+        w: 'oceanside_beach_w2',
+        n: 'rolling_dunes'
       },
       items: []
     },
@@ -248,7 +251,78 @@ export const INITIAL_WORLD: GameWorld = {
       id: 'salt_plains',
       name: 'Salt Plains',
       description: 'You are in a wide open plain filled with scrubby grass. You smell a salty breeze as you walk through the mix of sand and grass.',
-      exits: {},
+      exits: {
+        n: 'grassy_path'
+      },
+      items: []
+    },
+    'grassy_path': {
+      id: 'grassy_path',
+      name: 'Grassy Path',
+      description: 'You are on a footpath lined with fields of grass on either side. The path extends northwest further into grass fields and northeast toward distant mountains. The grass extends south into salt plains.',
+      exits: {
+        s: 'salt_plains',
+        nw: 'salt_grass_field',
+        ne: 'mountain_view'
+      },
+      items: []
+    },
+    'salt_grass_field': {
+      id: 'salt_grass_field',
+      name: 'Salt Grass Field',
+      description: 'Endless fields of salt grass wave in the wind. The soil here is white and crusty with salt.',
+      exits: {
+        se: 'grassy_path'
+      },
+      items: []
+    },
+    'mountain_view': {
+      id: 'mountain_view',
+      name: 'Mountain View',
+      description: 'You are walking along a dirt path with a view of towering distant mountains. The path curves to the southeast and southwest.',
+      exits: {
+        sw: 'grassy_path',
+        se: 'wildflower_field'
+      },
+      items: []
+    },
+    'wildflower_field': {
+      id: 'wildflower_field',
+      name: 'Wildflower Field',
+      description: 'The path meanders through a field of colorful wildflowers. A light breeze rustles the through the flowers and you can hear insects throughout the field. The path extends northwest to southeast.',
+      exits: {
+        nw: 'mountain_view',
+        se: 'foothills'
+      },
+      items: []
+    },
+    'foothills': {
+      id: 'foothills',
+      name: 'Foothills',
+      description: 'The path enters some rugged foothills spotted with boulders across the landscape. The path leads down the hills toward the northwest. The path goes south a short ways before gradually dispersing into the field of boulders.',
+      exits: {
+        nw: 'wildflower_field',
+        s: 'boulder_field'
+      },
+      items: []
+    },
+    'boulder_field': {
+      id: 'boulder_field',
+      name: 'Boulder Field',
+      description: 'You are standing in a boulder field that extends in all directions. There are open paths to the north and east between the boulders. There is a faint smell of salt breeze coming from the south. To the north you can see the faint profile of distant mountains.',
+      exits: {
+        n: 'foothills',
+        e: 'buried_structure'
+      },
+      items: []
+    },
+    'buried_structure': {
+      id: 'buried_structure',
+      name: 'Buried Structure',
+      description: 'You are standing in front of a buried stone structure hidden among the boulders. The stones are cut to fit tightly together forming a large square platform with no visible openings.',
+      exits: {
+        w: 'boulder_field'
+      },
       items: []
     }
   },
