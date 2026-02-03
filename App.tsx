@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { INITIAL_WORLD } from './gameConfig.ts';
-import { Direction, GameState, Room, RoomEvent } from './types.ts';
+import { Direction, GameState, Room, RoomEvent, GameWorld } from './types.ts';
 
 // Hardcoded build timestamp for version tracking (EST Timezone)
-const BUILD_TIMESTAMP = "2026-02-02 11:30 EST";
+const BUILD_TIMESTAMP = "2026-02-02 12:45 EST";
 
 // Component: Compass Button
 const NavButton: React.FC<{
@@ -45,7 +45,9 @@ export default function App() {
     }]
   });
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
   const logEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const currentRoom = world.rooms[state.currentRoomId];
 
@@ -60,8 +62,76 @@ export default function App() {
     }));
   };
 
-  const showBuildInfo = () => {
-    addLog(`Build Version: ${BUILD_TIMESTAMP}`, 'system');
+  const handleNewGame = () => {
+    if (window.confirm("Start a new game? All current progress will be lost.")) {
+      // Create a deep copy of INITIAL_WORLD to ensure a truly fresh start
+      const freshWorld = JSON.parse(JSON.stringify(INITIAL_WORLD));
+      setWorld(freshWorld);
+      setState({
+        currentRoomId: freshWorld.startRoom,
+        inventory: [],
+        flags: {},
+        logs: [{ 
+          type: 'narrative', 
+          text: freshWorld.rooms[freshWorld.startRoom].description, 
+          timestamp: Date.now() 
+        }]
+      });
+      setIsMainMenuOpen(false);
+      // We don't use addLog here because it relies on the previous state
+    }
+  };
+
+  const handleSaveGame = () => {
+    const saveData = {
+      world,
+      state,
+      timestamp: Date.now(),
+      version: BUILD_TIMESTAMP
+    };
+    
+    const blob = new Blob([JSON.stringify(saveData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const dateStr = new Date().toISOString().split('T')[0];
+    
+    link.href = url;
+    link.download = `gemini-quest-save-${dateStr}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    addLog("Game saved to file.", "system");
+    setIsMainMenuOpen(false);
+  };
+
+  const handleLoadGame = () => {
+    fileInputRef.current?.click();
+  };
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target?.result as string);
+        if (json.world && json.state) {
+          setWorld(json.world);
+          setState(json.state);
+          setIsMainMenuOpen(false);
+          addLog("Game loaded successfully from file.", "system");
+        } else {
+          addLog("Error: Invalid save file format.", "system");
+        }
+      } catch (err) {
+        addLog("Error: Failed to parse save file.", "system");
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
   };
 
   const isEventConditionsMet = (e: RoomEvent) => {
@@ -288,7 +358,7 @@ export default function App() {
     <div className="flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-slate-900 overflow-hidden border-x border-slate-700 relative">
       <header className="flex-shrink-0 p-3 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-md z-10 gap-3">
         <button 
-          onClick={showBuildInfo}
+          onClick={() => setIsMainMenuOpen(true)}
           className="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg shadow-inner flex-shrink-0 active:scale-95 transition-transform hover:border-indigo-500/50"
         >
           <h1 className="text-xs sm:text-sm font-black text-indigo-500 tracking-tighter uppercase italic">Gemini Quest</h1>
@@ -299,6 +369,15 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {/* Hidden File Input for Loading */}
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        onChange={onFileChange} 
+        style={{ display: 'none' }} 
+        accept=".json"
+      />
 
       <main className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-gradient-to-b from-slate-900 to-slate-950">
         {state.logs.map((log, i) => (
@@ -318,6 +397,44 @@ export default function App() {
         ))}
         <div ref={logEndRef} />
       </main>
+
+      {/* Main Menu Modal */}
+      {isMainMenuOpen && (
+        <div className="absolute inset-0 z-50 bg-slate-950/80 flex items-center justify-center p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-slate-800 border border-slate-600 rounded-xl w-full max-w-xs p-4 space-y-4 shadow-2xl">
+            <div className="text-center">
+              <h2 className="text-xl font-bold text-indigo-300 italic uppercase">Main Menu</h2>
+              <p className="text-[10px] text-slate-500 mt-1 font-mono">{BUILD_TIMESTAMP}</p>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              <button 
+                onClick={handleNewGame}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                New Game
+              </button>
+              <button 
+                onClick={handleSaveGame}
+                className="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                Save Game
+              </button>
+              <button 
+                onClick={handleLoadGame}
+                className="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                Load Game
+              </button>
+            </div>
+            <button 
+              onClick={() => setIsMainMenuOpen(false)}
+              className="w-full text-slate-500 text-sm font-medium py-2 hover:text-slate-300 transition-colors"
+            >
+              Back to Game
+            </button>
+          </div>
+        </div>
+      )}
 
       {selectedItemId && (
         <div className="absolute inset-0 z-50 bg-slate-950/80 flex items-center justify-center p-6 animate-in fade-in zoom-in duration-200">
